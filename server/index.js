@@ -8,7 +8,7 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors());
@@ -263,7 +263,10 @@ app.get('/api/dashboard', authenticateToken, async (req, res) => {
   try {
     // Get user's submitted projects
     const submittedProjects = await Project.find({ submitter: req.user.userId })
-      .populate('reviews')
+      .populate({
+        path: 'reviews',
+        populate: { path: 'reviewer', select: 'name' }
+      })
       .sort({ createdAt: -1 });
     
     // Get projects assigned for review
@@ -315,3 +318,4 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+

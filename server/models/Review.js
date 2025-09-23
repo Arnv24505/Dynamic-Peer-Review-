@@ -108,3 +108,4 @@ reviewSchema.virtual('averageScore').get(function() {
 reviewSchema.set('toJSON', { virtuals: true });
 
 module.exports = mongoose.model('Review', reviewSchema);
+

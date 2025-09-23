@@ -1,72 +1,130 @@
-# Dynamic Peer Review & Feedback Hub
+# 🎓 Dynamic Peer Review & Feedback Hub
 
-A comprehensive web platform where students, professionals, and creatives can anonymously submit their work, receive structured peer reviews, and provide feedback to others.
+A comprehensive peer review platform that enables anonymous, structured feedback for educational and professional projects. Built with modern web technologies to facilitate collaborative learning and constructive criticism.
 
-## 🎯 Project Overview
+## 🌟 Features
 
-The Dynamic Peer Review & Feedback Hub removes bias through anonymity and offers structured, rubric-based feedback. This platform promotes collaborative learning and helps users improve their work through constructive peer feedback.
+### 🔐 Authentication & User Management
+- **Secure Registration & Login** with JWT authentication
+- **Role-based Access Control** (Student, Teacher, Professional, Admin)
+- **User Profiles** with customizable information
+- **Password Security** with bcrypt hashing
+- **Session Management** with 24-hour token expiration
 
-## ✨ MVP Features (6 Core Features)
+### 📝 Project Submission
+- **Multi-format Support** for various project types:
+  - Essays and written content
+  - Code projects (JavaScript, Python, Java, C++, etc.)
+  - Artwork and creative projects
+  - Video content
+  - Presentations
+  - Research papers
+  - Other creative works
+- **File Upload System** with 10MB size limit
+- **Project Categorization** and tagging system
+- **Anonymous Submission** option
+- **Project Status Tracking** (Pending, Under Review, Completed, Archived)
 
-1. **✅ User Registration/Login** - Email/password authentication with JWT
-2. **✅ Project/Work Submission** - Upload documents, images, code with description and tags
-3. **✅ Anonymized Peer Review System** - Reviewer identity hidden from submitter
-4. **✅ Review Assignment Logic** - Match reviewers randomly or based on tags/skills
-5. **✅ Guided Feedback Forms** - Structured feedback with text and score ratings
-6. **✅ Dashboard for Pending Reviews** - Show all works assigned to the user for review
+### 🔍 Review System
+- **Anonymous Peer Reviews** to ensure unbiased feedback
+- **Structured Scoring Criteria**:
+  - Clarity (1-5 scale)
+  - Quality (1-5 scale)
+  - Originality (1-5 scale)
+  - Technical Implementation (1-5 scale)
+  - Presentation (1-5 scale)
+- **Comprehensive Feedback Forms**:
+  - Strengths identification
+  - Areas for improvement
+  - Actionable suggestions
+  - General comments
+- **Overall Rating System** (1-5 stars)
+- **Review Assignment Logic** to prevent self-reviewing
+- **Review History Tracking**
 
-## 🚀 Tech Stack
+### 📊 Dashboard & Analytics
+- **Personal Dashboard** with project overview
+- **Submitted Projects** management
+- **Assigned Reviews** tracking
+- **Review History** and statistics
+- **Project Performance** metrics
+- **Real-time Status Updates**
 
-- **Frontend**: React 18 + TailwindCSS
-- **Backend**: Node.js + Express.js
-- **Database**: MongoDB + Mongoose
-- **Authentication**: JWT + bcryptjs
-- **File Upload**: Multer
-- **UI Components**: Lucide React Icons
-- **Form Handling**: React Hook Form
-- **Notifications**: React Hot Toast
+### 🎨 Modern UI/UX
+- **Responsive Design** for all device sizes
+- **Tailwind CSS** for beautiful, consistent styling
+- **Interactive Components** with smooth animations
+- **Toast Notifications** for user feedback
+- **Loading States** and error handling
+- **Accessibility Features** for inclusive design
 
-## 📁 Project Structure
+## 🛠️ Tech Stack
 
-```
-Dynamic Peer Review/
-├── server/                 # Backend server
-│   ├── models/            # MongoDB models
-│   │   ├── User.js       # User model
-│   │   ├── Project.js    # Project model
-│   │   └── Review.js     # Review model
-│   └── index.js          # Express server
-├── client/                # React frontend
-│   ├── src/
-│   │   ├── components/   # Reusable components
-│   │   ├── contexts/     # React contexts
-│   │   ├── pages/        # Page components
-│   │   └── App.js        # Main app component
-│   ├── package.json      # Frontend dependencies
-│   └── tailwind.config.js # TailwindCSS config
-├── package.json           # Backend dependencies
-└── README.md             # This file
-```
+### Frontend
+- **React 18.2.0** - Modern UI framework
+- **React Router DOM 6.8.1** - Client-side routing
+- **React Hook Form 7.43.5** - Form handling and validation
+- **Axios 1.3.4** - HTTP client for API communication
+- **React Hot Toast 2.4.0** - Toast notifications
+- **Lucide React 0.263.1** - Icon library
+- **Tailwind CSS 3.2.7** - Utility-first CSS framework
+- **PostCSS 8.4.21** - CSS processing
+- **Autoprefixer 10.4.14** - CSS vendor prefixing
 
-## 🛠️ Installation & Setup
+### Backend
+- **Node.js** - Runtime environment
+- **Express.js 4.18.2** - Web framework
+- **MongoDB** - NoSQL database
+- **Mongoose 7.5.0** - MongoDB object modeling
+- **JWT (jsonwebtoken 9.0.2)** - Authentication tokens
+- **bcryptjs 2.4.3** - Password hashing
+- **Multer 1.4.5** - File upload handling
+- **CORS 2.8.5** - Cross-origin resource sharing
+- **Express Validator 7.0.1** - Input validation
+- **dotenv 16.3.1** - Environment variable management
+
+### Development Tools
+- **Nodemon 3.0.1** - Development server auto-restart
+- **Concurrently 8.2.0** - Running multiple commands simultaneously
+- **React Scripts 5.0.1** - Create React App tooling
+- **Jest & React Testing Library** - Testing framework
+
+## 🚀 Getting Started
 
 ### Prerequisites
+- **Node.js** (v18.20.8 or higher)
+- **MongoDB** (v7.0 or higher)
+- **npm** or **yarn** package manager
 
-- Node.js (v16 or higher)
-- MongoDB (local or cloud instance)
-- npm or yarn
+### Installation
 
-### Backend Setup
-
-1. **Install dependencies:**
+1. **Clone the repository**
    ```bash
-   npm install
+   git clone <repository-url>
+   cd dynamic-peer-review-hub
    ```
 
-2. **Create environment variables:**
-   Create a `.env` file in the root directory:
-   ```env
-   PORT=5000
+2. **Install dependencies**
+   ```bash
+   # Install root dependencies
+   npm install
+   
+   # Install client dependencies
+   cd client
+   npm install
+   cd ..
+   
+   # Or use the convenience script
+   npm run install-all
+   ```
+
+3. **Environment Setup**
+   ```bash
+   # Create .env file in root directory
+   cp .env.example .env
+   
+   # Edit .env with your configuration
+   PORT=5001
    NODE_ENV=development
    MONGODB_URI=mongodb://localhost:27017/peer-review-hub
    JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
@@ -74,45 +132,56 @@ Dynamic Peer Review/
    UPLOAD_PATH=./uploads
    ```
 
-3. **Start MongoDB:**
+4. **Start MongoDB**
    ```bash
-   # Local MongoDB
-   mongod
+   # Using Homebrew (macOS)
+   brew services start mongodb-community@7.0
    
-   # Or use MongoDB Atlas cloud service
+   # Or start manually
+   mongod
    ```
 
-4. **Start the backend server:**
+5. **Run the application**
    ```bash
-   npm run server
+   # Development mode (runs both client and server)
+   npm run dev
+   
+   # Or run separately
+   npm run server  # Backend on port 5001
+   npm run client  # Frontend on port 3000
    ```
 
-### Frontend Setup
+6. **Access the application**
+   - **Frontend**: http://localhost:3000
+   - **Backend API**: http://localhost:5001
 
-1. **Navigate to client directory:**
-   ```bash
-   cd client
-   ```
+## 📁 Project Structure
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Start the React development server:**
-   ```bash
-   npm start
-   ```
-
-### Full Stack Development
-
-To run both backend and frontend simultaneously:
-```bash
-# From root directory
-npm run dev
+```
+dynamic-peer-review-hub/
+├── client/                 # React frontend
+│   ├── public/            # Static assets
+│   ├── src/
+│   │   ├── components/    # Reusable UI components
+│   │   ├── contexts/      # React contexts (Auth)
+│   │   ├── pages/         # Page components
+│   │   ├── App.js         # Main app component
+│   │   └── index.js       # Entry point
+│   ├── package.json       # Frontend dependencies
+│   └── tailwind.config.js # Tailwind configuration
+├── server/                # Express backend
+│   ├── models/           # Mongoose models
+│   │   ├── User.js       # User schema
+│   │   ├── Project.js    # Project schema
+│   │   └── Review.js     # Review schema
+│   └── index.js          # Server entry point
+├── uploads/              # File upload directory
+├── .env                  # Environment variables
+├── package.json          # Root dependencies
+└── README.md            # This file
 ```
 
-## 🌐 API Endpoints
+## 🔌 API Endpoints
 
 ### Authentication
 - `POST /api/auth/register` - User registration
@@ -120,104 +189,128 @@ npm run dev
 
 ### Projects
 - `POST /api/projects` - Submit new project
-- `GET /api/projects/for-review` - Get projects for review
+- `GET /api/projects/for-review` - Get projects available for review
 - `GET /api/projects/:id` - Get project details
 
 ### Reviews
-- `POST /api/reviews` - Submit review
+- `POST /api/reviews` - Submit project review
+- `GET /api/reviews/:id` - Get review details
+
+### Dashboard
 - `GET /api/dashboard` - Get user dashboard data
 
-## 🔐 Authentication Flow
+## 🎯 Key Features Implemented
 
-1. **Registration**: Users create accounts with email, password, name, and role
-2. **Login**: JWT token-based authentication
-3. **Protected Routes**: All project and review operations require authentication
-4. **Anonymous Reviews**: Reviewers remain anonymous to project submitters
+### ✅ User Management
+- Complete user registration and authentication system
+- JWT-based secure sessions
+- Role-based access control
+- User profile management
 
-## 📊 Review System
+### ✅ Project Management
+- Multi-format project submission
+- File upload with validation
+- Project categorization and tagging
+- Status tracking and management
 
-### Scoring Criteria (1-5 scale)
-- **Clarity**: How clear and understandable is the project?
-- **Quality**: How well-executed and polished is the work?
-- **Originality**: How creative and innovative is the approach?
-- **Technical**: How technically sound and well-implemented is it?
-- **Presentation**: How well is the work presented and formatted?
+### ✅ Review System
+- Anonymous peer review functionality
+- Structured scoring criteria
+- Comprehensive feedback forms
+- Review assignment logic
 
-### Feedback Structure
-- **Strengths**: What aspects work well
-- **Areas for Improvement**: What could be enhanced
-- **Suggestions**: Specific improvement recommendations
-- **General Feedback**: Additional comments
+### ✅ Dashboard & Analytics
+- Personal dashboard with project overview
+- Review tracking and history
+- Performance metrics
+- Real-time updates
 
-## 🎨 UI/UX Features
+### ✅ Security & Validation
+- Input validation and sanitization
+- File type and size restrictions
+- Secure password hashing
+- CORS protection
 
-- **Responsive Design**: Mobile-first approach with TailwindCSS
-- **Modern Interface**: Clean, intuitive design with smooth animations
-- **Accessibility**: Proper ARIA labels and keyboard navigation
-- **Toast Notifications**: User feedback for all actions
-- **Loading States**: Visual feedback during async operations
+### ✅ UI/UX
+- Responsive design for all devices
+- Modern, intuitive interface
+- Smooth animations and transitions
+- Accessibility features
 
-## 🔒 Security Features
+## 🐛 Issues Resolved
 
-- **Password Hashing**: bcryptjs for secure password storage
-- **JWT Tokens**: Secure authentication without server-side sessions
-- **Input Validation**: Server-side validation for all inputs
-- **File Upload Security**: File type and size restrictions
-- **CORS Protection**: Cross-origin request handling
+### Port Configuration
+- **Issue**: Server was conflicting with Apple's AirPlay service on port 5000
+- **Solution**: Changed server port to 5001 and updated client proxy configuration
 
-## 📱 Responsive Design
+### Missing User Model
+- **Issue**: Server couldn't find the User model file
+- **Solution**: Created comprehensive User.js model with authentication methods
 
-The application is fully responsive and works on:
-- Desktop computers
-- Tablets
-- Mobile phones
-- All modern browsers
+### Mongoose Populate Errors
+- **Issue**: Dashboard endpoint failing due to missing reviews field in Project model
+- **Solution**: Added reviews field to Project schema and fixed populate queries
+
+### Environment Configuration
+- **Issue**: Server was using cached port configuration
+- **Solution**: Updated .env file to use correct port and restarted services
+
+### File Upload System
+- **Issue**: Missing uploads directory and file validation
+- **Solution**: Created uploads directory and implemented file type/size validation
 
 ## 🚀 Deployment
 
-### Backend Deployment
-1. Set `NODE_ENV=production`
-2. Configure production MongoDB URI
-3. Use strong JWT secret
-4. Set up proper CORS origins
-5. Configure file upload paths
+### Production Build
+```bash
+# Build the client
+npm run build
 
-### Frontend Deployment
-1. Build the React app: `npm run build`
-2. Serve static files from backend
-3. Configure API proxy for production
+# Start production server
+npm start
+```
+
+### Environment Variables for Production
+```bash
+PORT=5001
+NODE_ENV=production
+MONGODB_URI=mongodb://your-production-db-url
+JWT_SECRET=your-production-jwt-secret
+MAX_FILE_SIZE=10485760
+UPLOAD_PATH=./uploads
+```
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## 📝 License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## 👥 Authors
 
-For support or questions:
-- Create an issue in the repository
+- **Your Name** - *Initial work* - [YourGitHub](https://github.com/yourusername)
+
+## 🙏 Acknowledgments
+
+- React team for the amazing framework
+- Express.js team for the robust backend framework
+- MongoDB team for the flexible database
+- Tailwind CSS team for the utility-first CSS framework
+- All open-source contributors who made this project possible
+
+## 📞 Support
+
+If you have any questions or need help, please:
+- Open an issue on GitHub
+- Contact the development team
 - Check the documentation
-- Review the code comments
-
-## 🔮 Future Enhancements
-
-### Post-MVP Features
-- Google/LinkedIn OAuth integration
-- Advanced review assignment algorithms
-- Review quality scoring
-- Community features and discussions
-- Export/import functionality
-- Advanced analytics and reporting
-- Mobile app development
-- Integration with learning management systems
 
 ---
 
-**Built with ❤️ for collaborative learning and peer feedback**
+**Built with ❤️ for collaborative learning and peer review excellence**

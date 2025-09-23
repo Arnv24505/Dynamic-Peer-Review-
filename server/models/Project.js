@@ -49,6 +49,10 @@ const projectSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }],
+  reviews: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Review'
+  }],
   maxReviewers: {
     type: Number,
     default: 3
@@ -80,3 +84,4 @@ projectSchema.index({ tags: 1 });
 projectSchema.index({ createdAt: -1 });
 
 module.exports = mongoose.model('Project', projectSchema);
+
