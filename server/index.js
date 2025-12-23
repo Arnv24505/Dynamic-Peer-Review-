@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
 
 const app = express();
@@ -101,14 +102,14 @@ app.post('/api/auth/register', async (req, res) => {
     });
     
     await user.save();
-    
+
     // Generate JWT
     const token = jwt.sign(
       { userId: user._id, email: user.email, role: user.role },
       process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '24h' }
+      { expiresIn: '7d' }
     );
-    
+
     res.status(201).json({
       message: 'User created successfully',
       token,
@@ -141,14 +142,14 @@ app.post('/api/auth/login', async (req, res) => {
     if (!isValidPassword) {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
-    
+
     // Generate JWT
     const token = jwt.sign(
       { userId: user._id, email: user.email, role: user.role },
       process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '24h' }
+      { expiresIn: '7d' }
     );
-    
+
     res.json({
       message: 'Login successful',
       token,
@@ -309,6 +310,39 @@ app.get('/api/projects/:id', authenticateToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch project' });
   }
 });
+
+// Download project file
+app.get('/api/projects/:id/download', authenticateToken, async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+    
+    if (!project.filePath) {
+      return res.status(404).json({ error: 'No file associated with this project' });
+    }
+    
+    // Extract just the filename from the path
+    const fileName = project.filePath.split('/').pop();
+    const filePath = path.join(__dirname, '../uploads', fileName);
+    
+    // Check if file exists
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: 'File not found' });
+    }
+    
+    // Send the file for download
+    res.download(filePath, fileName);
+  } catch (error) {
+    console.error('Download error:', error);
+    res.status(500).json({ error: 'Failed to download file' });
+  }
+});
+
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Serve React app for all other routes
 app.get('*', (req, res) => {

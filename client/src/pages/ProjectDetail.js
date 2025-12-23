@@ -114,6 +114,36 @@ const ProjectDetail = () => {
     }
   };
 
+  const downloadFile = async () => {
+    if (!project.filePath) return;
+    
+    try {
+      const response = await axios.get(`/api/projects/${id}/download`, {
+        responseType: 'blob'
+      });
+      
+      // Create a blob URL and trigger download
+      const blob = new Blob([response.data]);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Get file extension from the filePath
+      const fileName = project.filePath.split('/').pop() || 'download';
+      link.download = fileName;
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      toast.success('File downloaded successfully!');
+    } catch (error) {
+      console.error('Error downloading file:', error);
+      toast.error('Failed to download file');
+    }
+  };
+
   const canReview = project && 
     project.submitter._id !== user.id && 
     !project.reviews.some(review => review.reviewer._id === user.id);
@@ -220,7 +250,10 @@ const ProjectDetail = () => {
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                   <FileText className="mx-auto h-12 w-12 text-gray-400 mb-2" />
                   <p className="text-sm text-gray-600 mb-2">File uploaded successfully</p>
-                  <button className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center mx-auto">
+                  <button 
+                    onClick={downloadFile}
+                    className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center mx-auto"
+                  >
                     <Download className="w-4 h-4 mr-2" />
                     Download File
                   </button>

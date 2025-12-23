@@ -9,7 +9,7 @@ A comprehensive peer review platform that enables anonymous, structured feedback
 - **Role-based Access Control** (Student, Teacher, Professional, Admin)
 - **User Profiles** with customizable information
 - **Password Security** with bcrypt hashing
-- **Session Management** with 24-hour token expiration
+- **Session Management** with 7 day token expiration
 
 ### 📝 Project Submission
 - **Multi-format Support** for various project types:
@@ -170,6 +170,7 @@ dynamic-peer-review-hub/
 │   ├── package.json       # Frontend dependencies
 │   └── tailwind.config.js # Tailwind configuration
 ├── server/                # Express backend
+|
 │   ├── models/           # Mongoose models
 │   │   ├── User.js       # User schema
 │   │   ├── Project.js    # Project schema
@@ -180,6 +181,7 @@ dynamic-peer-review-hub/
 ├── package.json          # Root dependencies
 └── README.md            # This file
 ```
+
 
 ## 🔌 API Endpoints
 

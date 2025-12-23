@@ -93,7 +93,7 @@ const reviewSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Indexes for faster queries
+// Indexes
 reviewSchema.index({ project: 1 });
 reviewSchema.index({ reviewer: 1 });
 reviewSchema.index({ createdAt: -1 });
