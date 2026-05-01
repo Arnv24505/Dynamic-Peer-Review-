@@ -10,22 +10,40 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5001;
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/peer-review-hub';
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../client/build')));
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/peer-review-hub', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// Avoid long hangs when MongoDB is unavailable
+mongoose.set('bufferCommands', false);
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
   console.log('Connected to MongoDB');
+});
+
+const connectToDatabase = async () => {
+  try {
+    await mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000
+    });
+  } catch (error) {
+    console.error('Failed to connect to MongoDB. API routes will return 503 until DB is available.');
+    console.error(error.message);
+  }
+};
+
+app.use('/api', (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({
+      error: 'Database unavailable. Start MongoDB and retry.'
+    });
+  }
+  next();
 });
 
 // File upload configuration
@@ -324,8 +342,8 @@ app.get('/api/projects/:id/download', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'No file associated with this project' });
     }
     
-    // Extract just the filename from the path
-    const fileName = project.filePath.split('/').pop();
+    // Normalize uploaded path separators (Windows/Linux) and keep only filename
+    const fileName = path.basename(project.filePath);
     const filePath = path.join(__dirname, '../uploads', fileName);
     
     // Check if file exists
@@ -352,4 +370,6 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+connectToDatabase();
 

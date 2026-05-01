@@ -128,8 +128,10 @@ const ProjectDetail = () => {
       const link = document.createElement('a');
       link.href = url;
       
-      // Get file extension from the filePath
-      const fileName = project.filePath.split('/').pop() || 'download';
+      // Prefer filename from Content-Disposition; fallback supports Windows/Linux paths
+      const disposition = response.headers['content-disposition'];
+      const fromHeader = disposition?.match(/filename="?([^"]+)"?/i)?.[1];
+      const fileName = fromHeader || project.filePath.split(/[\\/]/).pop() || 'download';
       link.download = fileName;
       
       document.body.appendChild(link);
