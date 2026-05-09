@@ -109,18 +109,10 @@ const ProjectDetail = () => {
     }
   };
 
+// REPLACE downloadFile with:
 const downloadFile = () => {
   if (!project.filePath) return;
-
-  let url = project.filePath;
-
-  // Convert image/upload -> raw/upload if needed
-  url = url.replace('/image/upload/', '/raw/upload/');
-
-  // Add attachment flag
-  url = url.replace('/upload/', '/upload/fl_attachment/');
-
-  window.open(url, '_blank');
+  window.open(project.filePath, '_blank');
 };
 
   const canReview = project && 

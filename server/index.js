@@ -11,14 +11,11 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/peer-review-hub';
-const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+const { createClient } = require('@supabase/supabase-js');
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
+);
 
 // Middleware
 app.use(cors());
@@ -55,26 +52,15 @@ app.use('/api', (req, res, next) => {
 });
 
 // File upload configuration
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: 'peer-review-hub',
-    resource_type: 'raw',
-    type: 'upload',
-    access_mode: 'public',
-    allowed_formats: ['jpeg', 'jpg', 'png', 'gif', 'pdf', 'doc', 'docx', 'txt', 'js', 'jsx', 'ts', 'tsx', 'py', 'java', 'cpp', 'c', 'html', 'css'],
-  }
-});
+const storage = multer.memoryStorage();
 
-const upload = multer({ 
-  storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /\.(jpeg|jpg|png|gif|pdf|doc|docx|txt|js|jsx|ts|tsx|py|java|cpp|c|html|css)$/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    if (extname) {
-      return cb(null, true);
-    }
+    if (extname) return cb(null, true);
     cb(new Error('Only supported file types are allowed'));
   }
 });
@@ -195,8 +181,25 @@ app.post('/api/auth/login', async (req, res) => {
 app.post('/api/projects', authenticateToken, upload.single('file'), async (req, res) => {
   try {
     const { title, description, tags, category } = req.body;
-    const filePath = req.file ? req.file.path : null;
-    
+    let filePath = null;
+
+    if (req.file) {
+      const fileName = `${Date.now()}-${req.file.originalname}`;
+      const { error } = await supabase.storage
+        .from('project-files')
+        .upload(fileName, req.file.buffer, {
+          contentType: req.file.mimetype
+        });
+
+      if (error) throw error;
+
+      const { data } = supabase.storage
+        .from('project-files')
+        .getPublicUrl(fileName);
+
+      filePath = data.publicUrl;
+    }
+
     const project = new Project({
       title,
       description,
@@ -206,20 +209,16 @@ app.post('/api/projects', authenticateToken, upload.single('file'), async (req, 
       submitter: req.user.userId,
       status: 'pending'
     });
-    
+
     await project.save();
-    
+
     res.status(201).json({
       message: 'Project submitted successfully',
-      project: {
-        id: project._id,
-        title: project.title,
-        status: project.status
-      }
+      project: { id: project._id, title: project.title, status: project.status }
     });
   } catch (error) {
     console.error('Project submission error:', error);
-    res.status(500).json({ error: 'Failed to submit project' });
+    res.status(500).json({ error: error.message || 'Failed to submit project' });
   }
 });
 
