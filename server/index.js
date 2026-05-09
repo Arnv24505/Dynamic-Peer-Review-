@@ -121,7 +121,7 @@ app.post('/api/auth/register', async (req, res) => {
     // Create user
     const user = new User({
       email,
-      password,
+      password: hashedPassword,
       name,
       role: role || 'student'
     });
