@@ -112,12 +112,15 @@ const ProjectDetail = () => {
 const downloadFile = () => {
   if (!project.filePath) return;
 
-  const downloadUrl = project.filePath.replace(
-    '/upload/',
-    '/upload/fl_attachment/'
-  );
+  let url = project.filePath;
 
-  window.open(downloadUrl, '_blank');
+  // Convert image/upload -> raw/upload if needed
+  url = url.replace('/image/upload/', '/raw/upload/');
+
+  // Add attachment flag
+  url = url.replace('/upload/', '/upload/fl_attachment/');
+
+  window.open(url, '_blank');
 };
 
   const canReview = project && 
