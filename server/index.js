@@ -59,7 +59,7 @@ const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: 'peer-review-hub',
-    resource_type: 'auto',
+    resource_type: 'raw',
     type: 'upload',
     access_mode: 'public',
     allowed_formats: ['jpeg', 'jpg', 'png', 'gif', 'pdf', 'doc', 'docx', 'txt', 'js', 'jsx', 'ts', 'tsx', 'py', 'java', 'cpp', 'c', 'html', 'css'],

@@ -111,7 +111,9 @@ const ProjectDetail = () => {
 
 const downloadFile = () => {
   if (!project.filePath) return;
-  window.open(project.filePath, '_blank');
+  // Force Cloudinary to serve the original file instead of rendering it
+  const url = project.filePath.replace('/upload/', '/upload/fl_attachment/');
+  window.open(url, '_blank');
 };
 
   const canReview = project && 
