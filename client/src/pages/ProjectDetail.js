@@ -111,14 +111,13 @@ const ProjectDetail = () => {
 
 const downloadFile = () => {
   if (!project.filePath) return;
-  const url = project.filePath.replace('/upload/', '/upload/fl_attachment/');
-  const link = document.createElement('a');
-  link.href = url;
-  link.target = '_blank';
-  link.rel = 'noopener noreferrer';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+
+  const downloadUrl = project.filePath.replace(
+    '/upload/',
+    '/upload/fl_attachment/'
+  );
+
+  window.open(downloadUrl, '_blank');
 };
 
   const canReview = project && 
