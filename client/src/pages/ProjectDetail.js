@@ -5,16 +5,11 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { 
   ArrowLeft, 
-  Eye, 
   Download, 
   Star, 
   MessageSquare,
   FileText,
-  Calendar,
-  User,
   Tag,
-  CheckCircle,
-  AlertCircle,
   X
 } from 'lucide-react';
 
@@ -114,37 +109,18 @@ const ProjectDetail = () => {
     }
   };
 
-  const downloadFile = async () => {
-    if (!project.filePath) return;
-    
-    try {
-      const response = await axios.get(`/api/projects/${id}/download`, {
-        responseType: 'blob'
-      });
-      
-      // Create a blob URL and trigger download
-      const blob = new Blob([response.data]);
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      
-      // Prefer filename from Content-Disposition; fallback supports Windows/Linux paths
-      const disposition = response.headers['content-disposition'];
-      const fromHeader = disposition?.match(/filename="?([^"]+)"?/i)?.[1];
-      const fileName = fromHeader || project.filePath.split(/[\\/]/).pop() || 'download';
-      link.download = fileName;
-      
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-      
-      toast.success('File downloaded successfully!');
-    } catch (error) {
-      console.error('Error downloading file:', error);
-      toast.error('Failed to download file');
-    }
-  };
+const downloadFile = async () => {
+  if (!project.filePath) return;
+  
+  try {
+    const response = await axios.get(`/api/projects/${id}/download`);
+    window.open(response.data.url, '_blank');
+    toast.success('File opened successfully!');
+  } catch (error) {
+    console.error('Error downloading file:', error);
+    toast.error('Failed to download file');
+  }
+};
 
   const canReview = project && 
     project.submitter._id !== user.id && 
