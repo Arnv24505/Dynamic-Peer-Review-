@@ -23,7 +23,7 @@ cloudinary.config({
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../client/build')));
+// app.use(express.static(path.join(__dirname, '../client/build')));
 
 // Avoid long hangs when MongoDB is unavailable
 mongoose.set('bufferCommands', false);
@@ -68,15 +68,12 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
   fileFilter: (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png|gif|pdf|doc|docx|txt|js|jsx|ts|tsx|py|java|cpp|c|html|css/;
+    const allowedTypes = /\.(jpeg|jpg|png|gif|pdf|doc|docx|txt|js|jsx|ts|tsx|py|java|cpp|c|html|css)$/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = allowedTypes.test(file.mimetype);
-    
-    if (mimetype && extname) {
+    if (extname) {
       return cb(null, true);
-    } else {
-      cb(new Error('Only supported file types are allowed'));
     }
+    cb(new Error('Only supported file types are allowed'));
   }
 });
 
@@ -357,8 +354,17 @@ app.get('/api/projects/:id/download', authenticateToken, async (req, res) => {
 // app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Serve React app for all other routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../client/build/index.html'));
+// });
+
+// Multer Error Handler
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError || err.message === 'Only supported file types are allowed') {
+    return res.status(400).json({ error: err.message });
+  }
+  console.error(err);
+  res.status(500).json({ error: err.message || 'Server error' });
 });
 
 app.listen(PORT, () => {
