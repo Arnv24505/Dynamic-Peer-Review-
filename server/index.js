@@ -5,12 +5,20 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+// const fs = require('fs');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5001;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/peer-review-hub';
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // Middleware
 app.use(cors());
@@ -47,12 +55,12 @@ app.use('/api', (req, res, next) => {
 });
 
 // File upload configuration
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'peer-review-hub',
+    resource_type: 'auto',
+    allowed_formats: ['jpeg', 'jpg', 'png', 'gif', 'pdf', 'doc', 'docx', 'txt', 'js', 'jsx', 'ts', 'tsx', 'py', 'java', 'cpp', 'c', 'html', 'css'],
   }
 });
 
@@ -330,29 +338,15 @@ app.get('/api/projects/:id', authenticateToken, async (req, res) => {
 });
 
 // Download project file
+// UPDATE: REMOVE the entire download route and replace with:
 app.get('/api/projects/:id/download', authenticateToken, async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
-    
-    if (!project) {
-      return res.status(404).json({ error: 'Project not found' });
-    }
-    
-    if (!project.filePath) {
-      return res.status(404).json({ error: 'No file associated with this project' });
-    }
-    
-    // Normalize uploaded path separators (Windows/Linux) and keep only filename
-    const fileName = path.basename(project.filePath);
-    const filePath = path.join(__dirname, '../uploads', fileName);
-    
-    // Check if file exists
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ error: 'File not found' });
-    }
-    
-    // Send the file for download
-    res.download(filePath, fileName);
+
+    if (!project) return res.status(404).json({ error: 'Project not found' });
+    if (!project.filePath) return res.status(404).json({ error: 'No file associated with this project' });
+
+    res.redirect(project.filePath); // filePath is now a full Cloudinary URL
   } catch (error) {
     console.error('Download error:', error);
     res.status(500).json({ error: 'Failed to download file' });
@@ -360,7 +354,7 @@ app.get('/api/projects/:id/download', authenticateToken, async (req, res) => {
 });
 
 // Serve uploaded files
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Serve React app for all other routes
 app.get('*', (req, res) => {
