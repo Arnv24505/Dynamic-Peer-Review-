@@ -368,6 +368,17 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message || 'Server error' });
 });
 
+// ADD this temporary route after your middleware setup:
+app.get('/api/test-supabase', async (req, res) => {
+  try {
+    const { data, error } = await supabase.storage.getBucket('project-files');
+    if (error) return res.json({ error: error.message, details: error });
+    res.json({ success: true, bucket: data });
+  } catch (err) {
+    res.json({ error: err.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
