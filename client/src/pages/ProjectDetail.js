@@ -109,17 +109,9 @@ const ProjectDetail = () => {
     }
   };
 
-const downloadFile = async () => {
+const downloadFile = () => {
   if (!project.filePath) return;
-  
-  try {
-    const response = await axios.get(`/api/projects/${id}/download`);
-    window.open(response.data.url, '_blank');
-    toast.success('File opened successfully!');
-  } catch (error) {
-    console.error('Error downloading file:', error);
-    toast.error('Failed to download file');
-  }
+  window.open(project.filePath, '_blank');
 };
 
   const canReview = project && 

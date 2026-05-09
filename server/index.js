@@ -339,18 +339,18 @@ app.get('/api/projects/:id', authenticateToken, async (req, res) => {
 // Download project file
 // UPDATE: REMOVE the entire download route and replace with:
 // REPLACE the download route:
-app.get('/api/projects/:id/download', authenticateToken, async (req, res) => {
-  try {
-    const project = await Project.findById(req.params.id);
-    if (!project) return res.status(404).json({ error: 'Project not found' });
-    if (!project.filePath) return res.status(404).json({ error: 'No file associated with this project' });
+// app.get('/api/projects/:id/download', authenticateToken, async (req, res) => {
+//   try {
+//     const project = await Project.findById(req.params.id);
+//     if (!project) return res.status(404).json({ error: 'Project not found' });
+//     if (!project.filePath) return res.status(404).json({ error: 'No file associated with this project' });
 
-    res.json({ url: project.filePath });
-  } catch (error) {
-    console.error('Download error:', error);
-    res.status(500).json({ error: 'Failed to download file' });
-  }
-});
+//     res.json({ url: project.filePath });
+//   } catch (error) {
+//     console.error('Download error:', error);
+//     res.status(500).json({ error: 'Failed to download file' });
+//   }
+// });
 
 // Serve uploaded files
 // app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
