@@ -2,6 +2,9 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
+// ADD this line after the imports, before the interceptor:
+axios.defaults.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+
 // Add axios response interceptor to handle 403 errors
 axios.interceptors.response.use(
   (response) => response,
