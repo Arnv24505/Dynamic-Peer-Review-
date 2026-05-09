@@ -371,9 +371,14 @@ app.use((err, req, res, next) => {
 // ADD this temporary route after your middleware setup:
 app.get('/api/test-supabase', async (req, res) => {
   try {
-    const { data, error } = await supabase.storage.getBucket('project-files');
+    // List all buckets to see what exists
+    const { data, error } = await supabase.storage.listBuckets();
     if (error) return res.json({ error: error.message, details: error });
-    res.json({ success: true, bucket: data });
+    res.json({ 
+      buckets: data,
+      supabase_url: process.env.SUPABASE_URL ? 'set' : 'missing',
+      supabase_key: process.env.SUPABASE_SERVICE_KEY ? 'set' : 'missing'
+    });
   } catch (err) {
     res.json({ error: err.message });
   }
