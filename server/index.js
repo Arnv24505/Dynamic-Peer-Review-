@@ -60,6 +60,8 @@ const storage = new CloudinaryStorage({
   params: {
     folder: 'peer-review-hub',
     resource_type: 'auto',
+    type: 'upload',
+    access_mode: 'public',
     allowed_formats: ['jpeg', 'jpg', 'png', 'gif', 'pdf', 'doc', 'docx', 'txt', 'js', 'jsx', 'ts', 'tsx', 'py', 'java', 'cpp', 'c', 'html', 'css'],
   }
 });
