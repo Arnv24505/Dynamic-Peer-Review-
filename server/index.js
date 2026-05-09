@@ -186,7 +186,7 @@ app.post('/api/projects', authenticateToken, upload.single('file'), async (req, 
     if (req.file) {
       const fileName = `${Date.now()}-${req.file.originalname}`;
       const { error } = await supabase.storage
-        .from('project-files')
+        .from('Project-Files')
         .upload(fileName, req.file.buffer, {
           contentType: req.file.mimetype
         });
@@ -194,7 +194,7 @@ app.post('/api/projects', authenticateToken, upload.single('file'), async (req, 
       if (error) throw error;
 
       const { data } = supabase.storage
-        .from('project-files')
+        .from('Project-Files')
         .getPublicUrl(fileName);
 
       filePath = data.publicUrl;
