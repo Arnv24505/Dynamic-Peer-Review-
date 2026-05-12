@@ -102,12 +102,12 @@ app.post('/api/auth/register', async (req, res) => {
     }
 
     // Hash password
-    const hashedPassword = await bcrypt.hash(password, 12);
+    // const hashedPassword = await bcrypt.hash(password, 12);
     
     // Create user
     const user = new User({
       email,
-      password: hashedPassword,
+      password,
       name,
       role: role || 'student'
     });
@@ -150,6 +150,7 @@ app.post('/api/auth/login', async (req, res) => {
     
     // Check password
     const isValidPassword = await bcrypt.compare(password, user.password);
+    console.log(isValidPassword);
     if (!isValidPassword) {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
